@@ -37,7 +37,6 @@ class media_jove_plugin extends core_media_player_external {
      * {@link list_supported_urls()} was called
      * @var bool
      */
-
     public function list_supported_urls(array $urls, array $options = array()) {
         // These only work with a SINGLE url (there is no fallback).
         if (count($urls) == 1) {
@@ -60,10 +59,30 @@ class media_jove_plugin extends core_media_player_external {
         }
         $info = s($info);
 
+        $features = self::get_features($url);
+        $allowedfeatures = self::get_allowed_features();
+ 
+        $featurequeries = '';
+        $featureheight = 0;
+        $featurewidth = 0;
+        foreach ($features as $feature) {
+            if (isset($allowedfeatures[$feature])) {
+                $featurequeries .= $allowedfeatures[$feature]->query;
+                $featureheight += $allowedfeatures[$feature]->height;
+                $featurewidth += $allowedfeatures[$feature]->width;
+            }
+        }
+        if (!empty($featurequeries)) {
+            $featurequeries .= '&fpv=1';
+        }
+
         if (empty($width)) {
             $width = 460;
-            $height = 415;
+            $height = 365;
         }
+        $width = $width + $featurewidth;
+        $height = $height + $featureheight;
+
         self::pick_video_size($width, $height);
 
         $videoid = end($this->matches);
@@ -71,12 +90,73 @@ class media_jove_plugin extends core_media_player_external {
         return <<<OET
 <span class="mediaplugin mediaplugin_jove">
 <iframe title="$info" width="$width" height="$height"
-  src="https://www.jove.com/embed/player?id=$videoid&t=1&s=1&fpv=1" frameborder="0" allowfullscreen="1"><p><a title="$info" href="$url">$info</a></p></iframe>
+  src="https://www.jove.com/embed/player?id=$videoid$featurequeries" frameborder="0" allowfullscreen="1"><p><a title="$info" href="$url">$info</a></p></iframe>
 </span>
 OET;
 
     }
 
+    /**
+     * Returns an array of requested features
+     * @param moodle_url $url
+     * @return array list of requested features
+     */
+    protected function get_features(moodle_url $url) {
+        if (!empty($url->params())) {
+           $allowedfeatures = self::get_allowed_features();
+           $requestedfeatures = array_keys($url->params());
+
+           $features = array();
+           foreach ($requestedfeatures as $requestedfeature) {
+               if (isset($allowedfeatures[$requestedfeature])) {
+                   $features[] = $requestedfeature;
+               }
+           }
+           return $features; 
+        }
+        return explode(',', get_config('media_jove', 'features'));
+    }
+
+    /**
+     * Returns an array of allowed features
+     * @return array list of allowed features
+     */
+    protected function get_allowed_features() {
+        $allowedfeatures = array();
+
+        $feature = new stdClass();
+        $feature->query = '&t=1';
+        $feature->height = 50;
+        $feature->width = 0;
+        $allowedfeatures['title'] = $feature;
+
+        $feature = new stdClass();
+        $feature->query = '&a=1';
+        $feature->height = 100;
+        $feature->width = 0;
+        $allowedfeatures['author'] = $feature;
+
+        $feature = new stdClass();
+        $feature->query = '&i=1';
+        $feature->height = 150;
+        $feature->width = 0;
+        $allowedfeatures['info'] = $feature;
+
+        $feature = new stdClass();
+        $feature->query = '&chap=1';
+        $feature->height = 0;
+        $feature->width = 180;
+        $allowedfeatures['chapter'] = $feature;
+
+        $feature = new stdClass();
+        $feature->query = '&s=1';
+        $feature->height = 0;
+        $feature->width = 0;
+        $allowedfeatures['pause'] = $feature;
+
+        return $allowedfeatures;
+    }
+ 
     /**
      * Returns regular expression used to match URLs for single jove video
      * @return string PHP regular expression e.g. '~^https?://example.org/~'

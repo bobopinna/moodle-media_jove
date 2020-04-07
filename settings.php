@@ -15,22 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for plugin 'media_jove'
+ * Settings file for plugin 'media_jove'
  *
  * @package   media_jove
  * @copyright 2020 Roberto Pinna
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'JoVE';
-$string['pluginname_help'] = 'The scientific video repository jove.com.';
-$string['privacy:metadata'] = 'The Youtube media plugin does not store any personal data.';
-$string['supportsvideo'] = 'JoVE videos';
-$string['features'] = 'Video features';
-$string['configfeatures'] = 'Default video features shown when video will be embeded. Custom features can be set for each video after URLs using ?title&amp;author&amp;info&amp;chapters&amp;pause';
-$string['title'] = 'Title';
-$string['author'] = 'Author(s)';
-$string['articledescription'] = 'Article Description';
-$string['chapters'] = 'Chapters';
-$string['pausevideo'] = 'Disable Autostart';
+defined('MOODLE_INTERNAL') || die();
 
+if ($ADMIN->fulltree) {
+
+    $features = array();
+    $features['title'] = new lang_string('title', 'media_jove'); 
+    $features['author'] = new lang_string('author', 'media_jove'); 
+    $features['info'] = new lang_string('articledescription', 'media_jove'); 
+    $features['chapters'] = new lang_string('chapters', 'media_jove'); 
+    $features['pause'] = new lang_string('pausevideo', 'media_jove'); 
+
+    $defaultfeatures = array('title' => 1, 'pause' => 1);
+    $settings->add(new admin_setting_configmulticheckbox('media_jove/features',
+        new lang_string('features', 'media_jove'),
+        new lang_string('configfeatures', 'media_jove'), $defaultfeatures, $features));
+
+}
