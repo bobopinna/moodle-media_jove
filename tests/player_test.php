@@ -136,8 +136,7 @@ class media_jove_testcase extends advanced_testcase {
 
         $this->assertRegExp('~mediaplugin_jove~', $content);
         $this->assertRegExp('~</iframe>~', $content);
-        $this->assertRegExp('~width="' . $CFG->media_default_width . '" height="' .
-            $CFG->media_default_height . '"~', $content);
+        $this->assertRegExp('~width="460" height="365"~', $content);
         // Video tag, unsupported text and tracks are removed.
         $this->assertNotRegExp('~</video>~', $content);
         $this->assertNotRegExp('~<source\b~', $content);
