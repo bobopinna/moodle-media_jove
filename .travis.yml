@@ -37,7 +37,11 @@ env:
 jobs:
  allow_failures:
   - php: 7.0
-    env: MOODLE_BRANCH=master MOODLE_BRANCH=MOODLE_38_STABLE MOODLE_BRANCH=MOODLE_37_STABLE 
+    env: MOODLE_BRANCH=master 
+  - php: 7.0
+    env: MOODLE_BRANCH=MOODLE_38_STABLE 
+  - php: 7.0
+    env: MOODLE_BRANCH=MOODLE_37_STABLE 
   - php: 7.1
     env: MOODLE_BRANCH=master 
 
