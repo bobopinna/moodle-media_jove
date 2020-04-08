@@ -35,7 +35,9 @@ class media_jove_plugin extends core_media_player_external {
     /**
      * Stores whether the playlist regex was matched last time when
      * {@link list_supported_urls()} was called
-     * @var bool
+     * @param array $urls the list of urls to check
+     * @param array $options not used
+     * @return array list of suppported urls
      */
     public function list_supported_urls(array $urls, array $options = array()) {
         // These only work with a SINGLE url (there is no fallback).
@@ -51,6 +53,15 @@ class media_jove_plugin extends core_media_player_external {
         return array();
     }
 
+    /**
+     * Get an url and returns the embed html for JoVE videos
+     * @param moodle_url $url a JoVE resource url
+     * @param string $name resource name
+     * @param int $width the defined embed width
+     * @param int $height the defined embed height
+     * @param array $options not used
+     * @return string the embed code
+     */
     protected function embed_external(moodle_url $url, $name, $width, $height, $options) {
 
         $info = trim($name);
@@ -91,7 +102,7 @@ class media_jove_plugin extends core_media_player_external {
 <span class="mediaplugin mediaplugin_jove">
   <iframe title="$info" width="$width" height="$height" src="https://www.jove.com/embed/player?id=$videoid$featurequeries"
       frameborder="0" allowfullscreen="1">
-    <p><a title="$info" href="$url">$info</a></p>
+    <p><a title="$info" href="{$url->out_omit_querystring()}">$info</a></p>
   </iframe>
 </span>
 OET;
@@ -174,6 +185,10 @@ OET;
         return $start . $middle . core_media_player_external::END_LINK_REGEX_PART;
     }
 
+    /**
+     * Returns array of embeddable markers for JoVE urls
+     * @return array JoVE resources allowed domain names
+     */
     public function get_embeddable_markers() {
         return array('jove.com');
     }
