@@ -64,7 +64,7 @@ class media_jove_testcase extends advanced_testcase {
         $manager = core_media_manager::instance();
 
         // Format: jove.
-        $url = new moodle_url('https://www.jove.comi/video/60910/in-vivo-hydroxyl-radical-protein-footprinting-for-study-protein');
+        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
         $t = $manager->embed_url($url);
         $this->assertContains('</iframe>', $t);
         $url = new moodle_url('https://www.jove.com/science-education/10552/scientific-method');
@@ -72,7 +72,8 @@ class media_jove_testcase extends advanced_testcase {
         $this->assertContains('</iframe>', $t);
 
         // Format: jove video with invalid parameter values (injection attempts).
-        $url = new moodle_url('https://www.jove.comi/video/60910/in-vivo-hydroxyl-radical-protein-footprinting-for-study-protein?index=4&list=PLxcO_">');
+        $inject = '?index=4&list=PLxcO_">';
+        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes'.$inject);
         $t = $manager->embed_url($url);
         $this->assertContains('</iframe>', $t);
         $this->assertNotContains('list=PLxcO_', $t); // We shouldn't get a list param as input was invalid.
@@ -84,7 +85,7 @@ class media_jove_testcase extends advanced_testcase {
     public function test_embed_url() {
         global $CFG;
 
-        $url = new moodle_url('https://www.jove.comi/video/60910/in-vivo-hydroxyl-radical-protein-footprinting-for-study-protein');
+        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
 
         $manager = core_media_manager::instance();
         $embedoptions = array(
@@ -112,7 +113,7 @@ class media_jove_testcase extends advanced_testcase {
      */
     public function test_embed_link() {
         global $CFG;
-        $url = new moodle_url('https://www.jove.comi/video/60910/in-vivo-hydroxyl-radical-protein-footprinting-for-study-protein');
+        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
         $text = html_writer::link($url, 'Watch this one');
         $content = format_text($text, FORMAT_HTML);
 
@@ -129,7 +130,7 @@ class media_jove_testcase extends advanced_testcase {
      */
     public function test_embed_media() {
         global $CFG;
-        $url = new moodle_url('https://www.jove.comi/video/60910/in-vivo-hydroxyl-radical-protein-footprinting-for-study-protein');
+        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
         $trackurl = new moodle_url('http://example.org/some_filename.vtt');
         $text = '<video controls="true"><source src="'.$url.'"/>' .
             '<track src="'.$trackurl.'">Unsupported text</video>';

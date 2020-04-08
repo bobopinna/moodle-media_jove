@@ -61,7 +61,7 @@ class media_jove_plugin extends core_media_player_external {
 
         $features = self::get_features($url);
         $allowedfeatures = self::get_allowed_features();
- 
+
         $featurequeries = '';
         $featureheight = 0;
         $featurewidth = 0;
@@ -89,8 +89,10 @@ class media_jove_plugin extends core_media_player_external {
 
         return <<<OET
 <span class="mediaplugin mediaplugin_jove">
-<iframe title="$info" width="$width" height="$height"
-  src="https://www.jove.com/embed/player?id=$videoid$featurequeries" frameborder="0" allowfullscreen="1"><p><a title="$info" href="$url">$info</a></p></iframe>
+  <iframe title="$info" width="$width" height="$height" src="https://www.jove.com/embed/player?id=$videoid$featurequeries"
+      frameborder="0" allowfullscreen="1">
+    <p><a title="$info" href="$url">$info</a></p>
+  </iframe>
 </span>
 OET;
 
@@ -103,16 +105,16 @@ OET;
      */
     protected function get_features(moodle_url $url) {
         if (!empty($url->params())) {
-           $allowedfeatures = self::get_allowed_features();
-           $requestedfeatures = array_keys($url->params());
+            $allowedfeatures = self::get_allowed_features();
+            $requestedfeatures = array_keys($url->params());
 
-           $features = array();
-           foreach ($requestedfeatures as $requestedfeature) {
-               if (isset($allowedfeatures[$requestedfeature])) {
-                   $features[] = $requestedfeature;
-               }
-           }
-           return $features; 
+            $features = array();
+            foreach ($requestedfeatures as $requestedfeature) {
+                if (isset($allowedfeatures[$requestedfeature])) {
+                    $features[] = $requestedfeature;
+                }
+            }
+            return $features;
         }
         return explode(',', get_config('media_jove', 'features'));
     }
@@ -156,7 +158,7 @@ OET;
 
         return $allowedfeatures;
     }
- 
+
     /**
      * Returns regular expression used to match URLs for single jove video
      * @return string PHP regular expression e.g. '~^https?://example.org/~'

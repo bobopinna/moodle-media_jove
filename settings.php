@@ -27,11 +27,11 @@ defined('MOODLE_INTERNAL') || die();
 if ($ADMIN->fulltree) {
 
     $features = array();
-    $features['title'] = new lang_string('title', 'media_jove'); 
-    $features['author'] = new lang_string('author', 'media_jove'); 
-    $features['info'] = new lang_string('articledescription', 'media_jove'); 
-    $features['chapters'] = new lang_string('chapters', 'media_jove'); 
-    $features['pause'] = new lang_string('pausevideo', 'media_jove'); 
+    $features['title'] = new lang_string('title', 'media_jove');
+    $features['author'] = new lang_string('author', 'media_jove');
+    $features['info'] = new lang_string('articledescription', 'media_jove');
+    $features['chapters'] = new lang_string('chapters', 'media_jove');
+    $features['pause'] = new lang_string('pausevideo', 'media_jove');
 
     $defaultfeatures = array('title' => 1, 'pause' => 1);
     $settings->add(new admin_setting_configmulticheckbox('media_jove/features',
