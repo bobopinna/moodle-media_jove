@@ -85,7 +85,7 @@ class media_jove_testcase extends advanced_testcase {
     public function test_embed_url() {
         global $CFG;
 
-        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
+        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
 
         $manager = core_media_manager::instance();
         $embedoptions = array(
@@ -98,8 +98,7 @@ class media_jove_testcase extends advanced_testcase {
 
         $this->assertRegExp('~mediaplugin_jove~', $content);
         $this->assertRegExp('~</iframe>~', $content);
-        $this->assertRegExp('~width="' . $CFG->media_default_width . '" height="' .
-            $CFG->media_default_height . '"~', $content);
+        $this->assertRegExp('~width="460" height="365"~', $content);
 
         // Repeat sending the specific size to the manager.
         $content = $manager->embed_url($url, 'New file', 123, 50, $embedoptions);
@@ -113,14 +112,13 @@ class media_jove_testcase extends advanced_testcase {
      */
     public function test_embed_link() {
         global $CFG;
-        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
+        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
         $text = html_writer::link($url, 'Watch this one');
         $content = format_text($text, FORMAT_HTML);
 
         $this->assertRegExp('~mediaplugin_jove~', $content);
         $this->assertRegExp('~</iframe>~', $content);
-        $this->assertRegExp('~width="' . $CFG->media_default_width . '" height="' .
-            $CFG->media_default_height . '"~', $content);
+        $this->assertRegExp('~width="460" height="365"~', $content);
     }
 
     /**
@@ -130,7 +128,7 @@ class media_jove_testcase extends advanced_testcase {
      */
     public function test_embed_media() {
         global $CFG;
-        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
+        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
         $trackurl = new moodle_url('http://example.org/some_filename.vtt');
         $text = '<video controls="true"><source src="'.$url.'"/>' .
             '<track src="'.$trackurl.'">Unsupported text</video>';
