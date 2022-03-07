@@ -176,7 +176,7 @@ OET;
      */
     protected function get_regex() {
         // Regex for standard jove link.
-        $link = '(jove\.com/(video|science-education|embed/directions)/)';
+        $link = '(jove\.com/(v|video|science-education|embed/directions)/)';
 
         // Initial part of link.
         $start = '~^https?://((www)\.)?(' . $link . ')';
