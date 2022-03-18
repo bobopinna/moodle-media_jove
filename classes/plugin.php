@@ -22,8 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Player that creates jove embedding.
  *
@@ -31,10 +29,9 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2020 Roberto Pinna
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class media_jove_plugin extends core_media_player_external {
+class media_jove_plugin extends \core_media_player_external {
     /**
      * Stores whether the playlist regex was matched last time when
-     * {@link list_supported_urls()} was called
      * @param array $urls the list of urls to check
      * @param array $options not used
      * @return array list of suppported urls

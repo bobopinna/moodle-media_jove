@@ -22,7 +22,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace media_jove;
+
+use core_media_manager;
 
 /**
  * Test script for media embedding.
@@ -31,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2020 Roberto Pinna
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class media_jove_testcase extends advanced_testcase {
+class player_test extends \advanced_testcase {
 
     /**
      * Pre-test setup. Preserves $CFG.
@@ -46,11 +48,13 @@ class media_jove_testcase extends advanced_testcase {
         \core\plugininfo\media::set_enabled_plugins('jove');
 
         // Pretend to be using Firefox browser (must support ogg for tests to work).
-        core_useragent::instance(true, 'Mozilla/5.0 (X11; Linux x86_64; rv:46.0) Gecko/20100101 Firefox/46.0 ');
+        \core_useragent::instance(true, 'Mozilla/5.0 (X11; Linux x86_64; rv:46.0) Gecko/20100101 Firefox/46.0 ');
     }
 
     /**
      * Test that plugin is returned as enabled media plugin.
+     *
+     * @covers \media_jove_plugin
      */
     public function test_is_installed() {
         $sortorder = \core\plugininfo\media::get_enabled_plugins();
@@ -59,21 +63,24 @@ class media_jove_testcase extends advanced_testcase {
 
     /**
      * Test supported link types
+     *
+     * @covers \media_jove_plugin
+     * @covers ::embed_external
      */
     public function test_supported() {
         $manager = core_media_manager::instance();
 
         // Format: jove.
-        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
+        $url = new \moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes');
         $t = $manager->embed_url($url);
         $this->assertContains('</iframe>', $t);
-        $url = new moodle_url('https://www.jove.com/science-education/10552/scientific-method');
+        $url = new \moodle_url('https://www.jove.com/science-education/10552/scientific-method');
         $t = $manager->embed_url($url);
         $this->assertContains('</iframe>', $t);
 
         // Format: jove video with invalid parameter values (injection attempts).
         $inject = '?index=4&list=PLxcO_">';
-        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes'.$inject);
+        $url = new \moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes'.$inject);
         $t = $manager->embed_url($url);
         $this->assertContains('</iframe>', $t);
         $this->assertNotContains('list=PLxcO_', $t); // We shouldn't get a list param as input was invalid.
@@ -81,11 +88,14 @@ class media_jove_testcase extends advanced_testcase {
 
     /**
      * Test embedding without media filter (for example for displaying URL resorce).
+     *
+     * @covers \media_jove_plugin
+     * @covers ::embed_external
      */
     public function test_embed_url() {
         global $CFG;
 
-        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
+        $url = new \moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
 
         $manager = core_media_manager::instance();
         $embedoptions = array(
@@ -109,11 +119,14 @@ class media_jove_testcase extends advanced_testcase {
      * Test that mediaplugin filter replaces a link to the supported file with media tag.
      *
      * filter_mediaplugin is enabled by default.
+     *
+     * @covers \media_jove_plugin
+     * @covers ::embed_external
      */
     public function test_embed_link() {
         global $CFG;
-        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
-        $text = html_writer::link($url, 'Watch this one');
+        $url = new \moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
+        $text = \html_writer::link($url, 'Watch this one');
         $content = format_text($text, FORMAT_HTML);
 
         $this->assertRegExp('~mediaplugin_jove~', $content);
@@ -125,11 +138,14 @@ class media_jove_testcase extends advanced_testcase {
      * Test that mediaplugin filter adds player code on top of <video> tags.
      *
      * filter_mediaplugin is enabled by default.
+     *
+     * @covers \media_jove_plugin
+     * @covers ::embed_external
      */
     public function test_embed_media() {
         global $CFG;
-        $url = new moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
-        $trackurl = new moodle_url('http://example.org/some_filename.vtt');
+        $url = new \moodle_url('https://www.jove.com/video/60144/a-blood-free-diet-to-rear-anopheline-mosquitoes?pause');
+        $trackurl = new \moodle_url('http://example.org/some_filename.vtt');
         $text = '<video controls="true"><source src="'.$url.'"/>' .
             '<track src="'.$trackurl.'">Unsupported text</video>';
         $content = format_text($text, FORMAT_HTML);

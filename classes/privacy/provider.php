@@ -24,8 +24,6 @@
 
 namespace media_jove\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy provider implementation for media_jove.
  *
