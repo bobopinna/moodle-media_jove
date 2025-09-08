@@ -60,7 +60,6 @@ class media_jove_plugin extends \core_media_player_external {
      * @return string the embed code
      */
     protected function embed_external(moodle_url $url, $name, $width, $height, $options) {
-
         $info = trim($name);
         if (empty($info) or strpos($info, 'http') === 0) {
             $info = get_string('pluginname', 'media_jove');
@@ -97,8 +96,8 @@ class media_jove_plugin extends \core_media_player_external {
 
         return <<<OET
 <span class="mediaplugin mediaplugin_jove">
-  <iframe title="$info" width="$width" height="$height" src="https://www.jove.com/embed/player?id=$videoid$featurequeries"
-      frameborder="0" allowfullscreen="1">
+  <iframe title="$info" width="$width" height="$height" src="https://app.jove.com/embed/player?id=$videoid$featurequeries"
+      frameborder="0" border="0" scrolling="no" allowfullscreen="1" allowTransparency="true" allow="encrypted-media *" marginwheight="0" marginwidth="0">
     <p><a title="$info" href="{$url->out_omit_querystring()}">$info</a></p>
   </iframe>
 </span>
@@ -173,10 +172,10 @@ OET;
      */
     protected function get_regex() {
         // Regex for standard jove link.
-        $link = '(jove\.com/(v|video|science-education|embed/directions)/)';
+        $link = '(jove\.com/(v|video|science-education/v|business-education/v|embed/directions)/)';
 
         // Initial part of link.
-        $start = '~^https?://((www)\.)?(' . $link . ')';
+        $start = '~^https?://((www|app)\.)?' . $link;
         // Middle bit: Video key value.
         $middle = '([0-9]+)';
         return $start . $middle . core_media_player_external::END_LINK_REGEX_PART;
